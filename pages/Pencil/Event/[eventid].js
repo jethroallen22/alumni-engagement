@@ -1,28 +1,6 @@
-import React from "react";
+import { useRouter } from "next/router";
+import Layout from "@/components/Pencil/Layout";
 import Link from "next/link";
-import dynamic from "next/dynamic";
-
-const EventDetail = dynamic(() => import("pages/Pencil/Event/[eventid]"));
-
-const EventCard = ({ event }) => {
-  return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg m-4">
-      <img className="w-full" src={event.image} alt={event.title} />
-      <div className="px-6 py-4">
-        <div className="font-bold text-xl mb-2">{event.title}</div>
-        <p className="text-gray-700 text-base">{event.description}</p>
-      </div>
-      <div className="px-6 py-4">
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          {event.date}
-        </span>
-        <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
-          {event.location}
-        </span>
-      </div>
-    </div>
-  );
-};
 
 const events = [
   {
@@ -126,21 +104,97 @@ const events = [
     location: "Amazon Rainforest, Brazil",
   },
 ];
-export default function UpcomingEvents() {
+const EventDetail = () => {
+  const router = useRouter();
+  const { eventid } = router.query;
+
+  console.log("events:", events); // Check the value of events array
+  console.log("id:", eventid); // Check the value of the id
+
+  const selectedEvent = events.find((event) => event.id === parseInt(eventid));
+
+  const Breadcrumbs = () => {
+    return (
+      <nav class="text-sm mb-10">
+        <ol class="list-reset flex">
+          <li>
+            <Link className="text-blue-500" href={`/`}>
+              Home
+            </Link>
+          </li>
+          <li className="mx-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.25 4.5l7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </li>
+          <li>
+            <Link className="text-blue-500" href={`/Pencil`}>
+              Pencil
+            </Link>
+          </li>
+          <li className="mx-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.25 4.5l7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </li>
+          <li>
+            <span class="text-gray-500">Event</span>
+          </li>
+        </ol>
+      </nav>
+    );
+  };
+
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Upcoming Events</h1>
-      <div className="flex flex-wrap">
-        {events.map((event) => (
-          <Link
-            href={`/Pencil/Event/${event.id}`}
-            as={`/Pencil/Event/${event.id}`}
-            key={event.id}
-          >
-            <EventCard event={event} />
-          </Link>
-        ))}
+    <Layout>
+      <Breadcrumbs />
+      <div className="px-6 py-4">
+        <div className="text-3xl font-bold">{selectedEvent.title}</div>
       </div>
-    </div>
+      <div className="max-w-full m-8">
+        <div className="w-full">
+          <img
+            className="w-full"
+            src={selectedEvent.image}
+            alt={selectedEvent.title}
+          />
+        </div>
+        <div className="px-6 py-4">
+          <p className="text-gray-700 text-base">{selectedEvent.description}</p>
+        </div>
+        <div className="px-6 py-4">
+          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+            {selectedEvent.date}
+          </span>
+          <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2">
+            {selectedEvent.location}
+          </span>
+        </div>
+      </div>
+    </Layout>
   );
-}
+};
+
+export default EventDetail;
