@@ -1,5 +1,5 @@
 import Table from "@/components/Pencil/Table";
-import Layout from "@/components/Listy/Layout";
+import Layout from "@/components/Pencil/Layout";
 import Link from "next/link";
 
 const Breadcrumbs = () => {
