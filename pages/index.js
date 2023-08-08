@@ -1,7 +1,6 @@
-import Head from 'next/head';
-import Banner from '@/components/Banner';
-import Features from '@/components/Features';
-import Pricing from '@/components/Pricing';
+import Head from "next/head";
+import Banner from "@/components/Banner";
+import Features from "@/components/Features";
 
 export default function Home() {
   return (
@@ -12,16 +11,12 @@ export default function Home() {
       </Head>
 
       <Banner />
-      
+
       <main>
         <Features />
-
-        <Pricing />
       </main>
 
-      <footer>
-        {/* Footer content goes here */}
-      </footer>
+      <footer>{/* Footer content goes here */}</footer>
     </div>
   );
 }
