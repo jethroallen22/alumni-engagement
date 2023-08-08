@@ -42,26 +42,26 @@ const JobDetail = () => {
                 </div>
 
                 <p className="text-white mb-2">{selectedJob.company}</p>
-                <p className="text-gray-600 mb-2">{selectedJob.location}</p>
-                <p className="text-gray-600 mb-2">{selectedJob.job_type}</p>
-                <p className="text-gray-600 mb-2">{selectedJob.experience}</p>
-                <p className="text-gray-600 mb-4">{selectedJob.description}</p>
+                <p className="text-white mb-2">{selectedJob.location}</p>
+                <p className="text-white mb-2">{selectedJob.job_type}</p>
+                <p className="text-white mb-2">{selectedJob.experience}</p>
+                <p className="text-white mb-4">{selectedJob.description}</p>
                 <h1 className="text-xl font-medium mb-4">Qualifications</h1>
                 <ul className="list-disc">
                   {selectedJob.qualifications.map((qualification) => (
-                    <li className="text-gray-600 mb-2 ml-5">{qualification}</li>
+                    <li className="text-white mb-2 ml-5">{qualification}</li>
                   ))}
                 </ul>
                 <h1 className="text-xl font-medium mb-4">Requirements</h1>
                 <ul className="list-disc">
                   {selectedJob.requirements.map((requirement) => (
-                    <li className="text-gray-600 mb-2 ml-5">{requirement}</li>
+                    <li className="text-white mb-2 ml-5">{requirement}</li>
                   ))}
                 </ul>
                 <h1 className="text-xl font-medium mb-4">Skills</h1>
                 <ul className="list-disc">
                   {selectedJob.skills.map((skill) => (
-                    <li className="text-gray-600 mb-2 ml-5">{skill}</li>
+                    <li className="text-white mb-2 ml-5">{skill}</li>
                   ))}
                 </ul>
               </div>
