@@ -38,15 +38,6 @@ const Sidebar = ({ children }) => {
               Management
             </Link>
           </li>
-          <li
-            className={`px-20 py-2 text-white ${
-              router.pathname == "/Listy/Kelly" ? "bg-red-500" : ""
-            }`}
-          >
-            <Link className="hover:text-blue-500" href={`/Listy/Kelly`}>
-              Kelly
-            </Link>
-          </li>
         </ul>
       </aside>
 

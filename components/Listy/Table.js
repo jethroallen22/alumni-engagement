@@ -19,7 +19,7 @@ const Table = () => {
       name: "Brenda Stephens",
       status: "Student",
       course: "BS Political Science",
-      year_graduated: "",
+      year_graduated: "2016",
     },
     {
       id: 3,
@@ -77,8 +77,16 @@ const Table = () => {
       course: "BS Mechanical Engineering",
       year_graduated: "2011",
     },
+    {
+      id: 11,
+      name: "Kaya Johnston",
+      status: "Alumni",
+      course: "BS Information Technology",
+      year_graduated: "2010",
+    },
   ]);
 
+  const [tempData, setTempData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchKey, setSearchkey] = useState(null);
   const [editingId, setEditingId] = useState(null);
@@ -97,6 +105,12 @@ const Table = () => {
   const [course, setCourse] = useState("");
   const [yearGraduated, setYearGraduated] = useState(0);
   const [downloadData, setDownloadData] = useState(null);
+  const [deleteId, setDeleteId] = useState(0);
+  const [editId, setEditId] = useState(0);
+  const [editName, setEditName] = useState("");
+  const [editStatus, setEditStatus] = useState("");
+  const [editCourse, setEditCourse] = useState("");
+  const [editYear, setEditYear] = useState("");
 
   const handleEdit = (id) => {
     const row = data.find((item) => item.id === id);
@@ -213,44 +227,43 @@ const Table = () => {
       } else if (inputValue.includes("edit")) {
         const tempName = inputValue.substring(4).trim();
         setName(tempName);
-        console.log(tempName);
-        setEntryContext("edit");
-        const editEntry = data.find(
+        const editEntry = data.filter(
           (entry) => entry.name.toLowerCase() === tempName.toLowerCase()
         );
-        if (editEntry) {
+        console.log(editEntry.length);
+        if (editEntry.length === 1) {
+          setEntryContext("edit");
+          setEditId(editEntry[0].id);
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
-              text: `Name:  ${editEntry.name}`,
+              text: `Name:  ${editEntry[0].name}\nStatus:  ${editEntry[0].status}\nCourse:  ${editEntry[0].course}\nYear Graduated:  ${editEntry[0].year_graduated}`,
+              sender: "bot",
+            },
+            {
+              text: `Please select one field and type "name" if you want to the edit name, "status" if you want to edit the status, "course" if you want to edit the course, or "year" if you want to edit the year graduated, followed by the necessary details you want to include. (eg: name ${editEntry.name})' `,
               sender: "bot",
             },
           ]);
+        } else if (editEntry.length > 1) {
+          setEntryContext("edit_many");
+          editEntry.forEach((entry, index) => {
+            setChatMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                text: `${index + 1}.)\nName:  ${entry.name}\nStatus: ${
+                  entry.status
+                }\nCourse: ${entry.course}\nYear Graduated: ${
+                  entry.year_graduated
+                }`,
+                sender: "bot",
+              },
+            ]);
+          });
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
-              text: `Status:  ${editEntry.status}`,
-              sender: "bot",
-            },
-          ]);
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Course:  ${editEntry.course}`,
-              sender: "bot",
-            },
-          ]);
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Year Graduated:  ${editEntry.year_graduated}`,
-              sender: "bot",
-            },
-          ]);
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Please select one field and type "name" if you want to the edit name, "status" if you want to edit the status, "course" if you wat to edit the course, or "year" if you want to edit the year graduated, followed by the necessary details you want to include. (eg: name John Doe)' `,
+              text: `Please select one entry from the above list to edit by typing its corresponding number. (e.g., "edit 1")`,
               sender: "bot",
             },
           ]);
@@ -267,44 +280,42 @@ const Table = () => {
       } else if (inputValue.includes("delete")) {
         const tempName = inputValue.substring(6).trim();
         setName(tempName);
-        console.log(tempName);
-        setEntryContext("delete");
-        const deleteEntry = data.find(
+        const deleteEntry = data.filter(
           (entry) => entry.name.toLowerCase() === tempName.toLowerCase()
         );
-        if (deleteEntry) {
+        console.log(deleteEntry.length);
+        if (deleteEntry.length === 1) {
+          setEntryContext("delete");
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
-              text: `Name:  ${deleteEntry.name}`,
+              text: `Name:  ${deleteEntry[0].name}\nStatus: ${deleteEntry[0].status}\nCourse: ${deleteEntry[0].course}\nYear Graduated: ${deleteEntry[0].year_graduated}`,
               sender: "bot",
             },
-          ]);
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Status:  ${deleteEntry.status}`,
-              sender: "bot",
-            },
-          ]);
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Course:  ${deleteEntry.course}`,
-              sender: "bot",
-            },
-          ]);
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Year Graduated:  ${deleteEntry.year_graduated}`,
-              sender: "bot",
-            },
-          ]);
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
             {
               text: `Are you sure to delete this entry? Type Yes or No.`,
+              sender: "bot",
+            },
+          ]);
+        } else if (deleteEntry.length > 1) {
+          setEntryContext("delete_many");
+          deleteEntry.forEach((entry, index) => {
+            setChatMessages((prevMessages) => [
+              ...prevMessages,
+              {
+                text: `${index + 1}.)\nName:  ${entry.name}\nStatus: ${
+                  entry.status
+                }\nCourse: ${entry.course}\nYear Graduated: ${
+                  entry.year_graduated
+                }`,
+                sender: "bot",
+              },
+            ]);
+          });
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: `Please select one entry from the above list to delete by typing its corresponding number. (e.g., "delete 1")`,
               sender: "bot",
             },
           ]);
@@ -321,27 +332,27 @@ const Table = () => {
       } else if (inputValue.includes("deduplicate")) {
         const tempName = inputValue.substring(11).trim();
         setName(tempName);
-        setEntryContext("deduplicate");
-        const editEntry = data.find(
+        const deduplicateEntry = data.filter(
           (entry) => entry.name.toLowerCase() === tempName.toLowerCase()
         );
-        if (editEntry) {
-          const countDuplicates = () => {
-            const duplicatesCount = data.filter((entry) => {
-              return entry.name.toLowerCase() === editEntry.name.toLowerCase();
-            }).length;
-
-            return duplicatesCount;
-          };
-          const duplicatesCount = countDuplicates();
-          console.log(duplicatesCount);
+        if (deduplicateEntry.length === 1) {
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
-              text: `It appears that ${editEntry.name} appeared ${duplicatesCount} times. Are you sure to remove duplicated entries? Type Yes or No.`,
+              text: `Great news! I'm glad to inform you that there are no duplicated entries matching your input. If you have any further concerns or need assistance, feel free to ask.`,
               sender: "bot",
             },
           ]);
+          setEntryContext(null);
+        } else if (deduplicateEntry.length > 1) {
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: `It appears that ${deduplicateEntry.name} appeared ${deduplicateEntry.length} times. Are you sure to remove duplicated entries? Type Yes or No.`,
+              sender: "bot",
+            },
+          ]);
+          setEntryContext("deduplicate");
         } else {
           setChatMessages((prevMessages) => [
             ...prevMessages,
@@ -411,69 +422,51 @@ const Table = () => {
         setEntryContext("edit_field");
         if (inputValue.includes("name")) {
           const newName = inputValue.substring(5).trim();
-          setData((prevData) =>
-            prevData.map((entry) => {
-              if (entry.name.toLowerCase() === name.toLowerCase()) {
-                return { ...entry, name: newName };
-              }
-              return entry;
-            })
-          );
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Do you want to continue? Type "Yes" or "No".`,
-              sender: "bot",
-            },
-          ]);
+          setEditName(newName);
         } else if (inputValue.includes("status")) {
           const newStatus = inputValue.substring(7);
-          setData((prevData) =>
-            prevData.map((entry) => {
-              if (entry.name.toLowerCase() === name.toLowerCase()) {
-                return { ...entry, status: newStatus };
-              }
-              return entry;
-            })
-          );
-          setChatMessages((prevMessages) => [
-            ...prevMessages,
-            {
-              text: `Do you want to continue? Type "Yes" or "No".`,
-              sender: "bot",
-            },
-          ]);
+          setEditStatus(newStatus);
         } else if (inputValue.includes("course")) {
           const newCourse = inputValue.substring(7);
-          setData((prevData) =>
-            prevData.map((entry) => {
-              if (entry.name.toLowerCase() === name.toLowerCase()) {
-                return { ...entry, course: newCourse };
-              }
-              return entry;
-            })
-          );
+          setEditCourse(newCourse);
+        } else if (inputValue.includes("year")) {
+          const newYearGraduated = inputValue.substring(5);
+          setEditYear(newYearGraduated);
+        } else {
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
-              text: `Do you want to continue? Type "Yes" or "No".`,
+              text: `Apologies, it seems I'm having difficulty understanding your request. Could you please rephrase or provide more context so I can assist you better? Let's start again.`,
               sender: "bot",
             },
           ]);
-        } else if (inputValue.includes("year")) {
-          const newYearGraduated = inputValue.substring(5);
-          setData((prevData) =>
-            prevData.map((entry) => {
-              if (entry.name.toLowerCase() === name.toLowerCase()) {
-                return { ...entry, year_graduated: newYearGraduated };
-              }
-              return entry;
-            })
+          setEntryContext(null);
+        }
+        setChatMessages((prevMessages) => [
+          ...prevMessages,
+          {
+            text: `Do you want to continue? Type "Yes" or "No".`,
+            sender: "bot",
+          },
+        ]);
+      } else if (entryContext === "edit_many") {
+        if (inputValue.includes("edit")) {
+          const tempNum = parseInt(inputValue.substring(5).trim());
+          const filterEntry = data.filter(
+            (entry) => entry.name.toLowerCase() === name.toLowerCase()
           );
+          const tempId = filterEntry[tempNum - 1].id;
+          setEditId(tempId);
+          setEntryContext("edit");
+          const editEntry = data.find((entry) => entry.id === tempId);
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
-              text: `Do you want to continue? Type "Yes" or "No".`,
+              text: `Name:  ${editEntry.name}\nStatus:  ${editEntry.status}\nCourse:  ${editEntry.course}\nYear Graduated:  ${editEntry.year_graduated}`,
+              sender: "bot",
+            },
+            {
+              text: `Please select one field and type "name" if you want to the edit name, "status" if you want to edit the status, "course" if you want to edit the course, or "year" if you want to edit the year graduated, followed by the necessary details you want to include. (eg: name ${editEntry.name})' `,
               sender: "bot",
             },
           ]);
@@ -489,40 +482,14 @@ const Table = () => {
         }
       } else if (entryContext === "edit_field") {
         if (inputValue.toLowerCase() === "yes") {
-          const editEntry = data.find(
-            (entry) => entry.name.toLowerCase() === name.toLowerCase()
-          );
+          const editEntry = data.find((entry) => entry.id === editId);
           if (editEntry) {
             setChatMessages((prevMessages) => [
               ...prevMessages,
               {
-                text: `Name:  ${editEntry.name}`,
+                text: `Name:  ${editEntry.name}\nStatus:  ${editEntry.status}\nCourse:  ${editEntry.course}\nYear Graduated:  ${editEntry.year_graduated}`,
                 sender: "bot",
               },
-            ]);
-            setChatMessages((prevMessages) => [
-              ...prevMessages,
-              {
-                text: `Status:  ${editEntry.status}`,
-                sender: "bot",
-              },
-            ]);
-            setChatMessages((prevMessages) => [
-              ...prevMessages,
-              {
-                text: `Course:  ${editEntry.course}`,
-                sender: "bot",
-              },
-            ]);
-            setChatMessages((prevMessages) => [
-              ...prevMessages,
-              {
-                text: `Year Graduated:  ${editEntry.year_graduated}`,
-                sender: "bot",
-              },
-            ]);
-            setChatMessages((prevMessages) => [
-              ...prevMessages,
               {
                 text: `Please select one field and type "name" if you want to the edit name, "status" if you want to edit the status, "course" if you wat to edit the course, or "year" if you want to edit the year graduated, followed by the necessary details you want to include. (eg: name John Doe)' `,
                 sender: "bot",
@@ -541,6 +508,20 @@ const Table = () => {
           }
         } else if (inputValue.toLowerCase() === "no") {
           setEntryContext(null);
+          setData((prevData) =>
+            prevData.map((entry) => {
+              if (entry.id === editId) {
+                if (editName !== "") entry.name = editName;
+
+                if (editStatus !== "") entry.status = editStatus;
+
+                if (editCourse !== "") entry.course = editCourse;
+
+                if (editYear !== "") entry.year_graduated = editYear;
+              }
+              return entry;
+            })
+          );
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
@@ -564,6 +545,58 @@ const Table = () => {
             prevData.filter(
               (item) => item.name.toLowerCase() !== name.toLowerCase()
             )
+          );
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: "Entry has been successfully deleted from the database. Thank you!",
+              sender: "bot",
+            },
+          ]);
+          setEntryContext(null);
+        } else if (inputValue.toLowerCase() === "no") {
+          setEntryContext(null);
+        } else {
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: `Apologies, it seems I'm having difficulty understanding your request. Could you please rephrase or provide more context so I can assist you better? Let's start again.`,
+              sender: "bot",
+            },
+          ]);
+          setEntryContext(null);
+        }
+      } else if (entryContext === "delete_many") {
+        if (inputValue.includes("delete")) {
+          const tempNum = parseInt(inputValue.substring(6).trim());
+          const deleteEntry = data.filter(
+            (entry) => entry.name.toLowerCase() === name.toLowerCase()
+          );
+          const tempId = deleteEntry[tempNum - 1].id;
+          setDeleteId(tempId);
+          console.log(tempId);
+          setEntryContext("delete_condition");
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: `Are you sure to delete this entry? Type Yes or No.`,
+              sender: "bot",
+            },
+          ]);
+        } else {
+          setChatMessages((prevMessages) => [
+            ...prevMessages,
+            {
+              text: `Apologies, it seems I'm having difficulty understanding your request. Could you please rephrase or provide more context so I can assist you better? Let's start again.`,
+              sender: "bot",
+            },
+          ]);
+          setEntryContext(null);
+        }
+      } else if (entryContext === "delete_condition") {
+        if (inputValue.toLowerCase() === "yes") {
+          setData((prevData) =>
+            prevData.filter((item) => item.id !== deleteId)
           );
           setChatMessages((prevMessages) => [
             ...prevMessages,
@@ -670,7 +703,7 @@ const Table = () => {
         ...prevMessages,
         { text: help, sender: "bot" },
       ]);
-    } else if (command.trim() === "Deduplicate uploaded database") {
+    } else if (command.trim() === "Deduplicate an entry") {
       const help =
         'Deduplicate entry: To remove duplicate entries from the database, use the "deduplicate" followed by the entry\'s name. (eg: deduplicate John Doe)';
       setChatMessages((prevMessages) => [
@@ -918,7 +951,7 @@ const Table = () => {
                 {chatMessages.map((chatMessage, index) => (
                   <div
                     key={index}
-                    className={`ml-4 mr-4 mt-1 mb-1 ${
+                    className={`ml-4 mr-4 mt-2 mb-1 ${
                       chatMessage.sender === "user" ? "text-right" : "text-left"
                     }`}
                   >
