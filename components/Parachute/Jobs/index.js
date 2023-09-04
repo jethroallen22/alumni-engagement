@@ -171,17 +171,17 @@ const Jobs = () => {
   return (
     <div className="flex justify-center">
       <div className="w-1/2 p-4">
-        <h1 className="text-3xl font-bold mb-6 text-white">Job Feed</h1>
+        <h1 className="text-3xl font-bold mb-6 text-gray-800">Job Feed</h1>
         {jobs.map((job) => (
           <div
             key={job.id}
-            className="bg-gray-900 text-white rounded-lg shadow-md p-6 mb-4"
+            className="bg-white text-gray-800 rounded-lg shadow-md p-6 mb-4"
           >
             <h2 className="text-xl font-bold mb-2">{job.title}</h2>
-            <h3 className="text-gray-300 text-sm mb-2">{job.company}</h3>
-            <p className="text-gray-300 mb-4">{job.location}</p>
+            <h3 className="text-gray-800 text-sm mb-2">{job.company}</h3>
+            <p className="text-gray-800 mb-4">{job.location}</p>
             <p
-              className="text-gray-200"
+              className="text-gray-800"
               style={{
                 display: "-webkit-box",
                 WebkitLineClamp: 3,
@@ -193,7 +193,7 @@ const Jobs = () => {
             </p>
 
             <button
-              className="bg-transparent hover:bg-gray-500 text-white font-bold mt-2 px-4 py-2 border border-gray-500 hover:border-transparent rounded flex items-center"
+              className="bg-gray-700 hover:bg-gray-800 text-white font-bold mt-2 px-4 py-2 border border-gray-500 hover:border-transparent rounded flex items-center"
               onClick={() => {
                 console.log("Click " + job.id);
                 handleViewJobButtonClick(job.id);
