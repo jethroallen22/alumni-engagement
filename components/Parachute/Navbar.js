@@ -54,10 +54,10 @@ const Navbar = () => {
                   News
                 </a>
                 <a
-                  href="#"
+                  href={"/Parachute/Contacts"}
                   className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 >
-                  Contact
+                  Contacts
                 </a>
               </div>
             </div>

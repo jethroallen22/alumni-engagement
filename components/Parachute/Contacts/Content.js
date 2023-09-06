@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+import React from "react";
 
 export default function Content({ children }) {
   return (
