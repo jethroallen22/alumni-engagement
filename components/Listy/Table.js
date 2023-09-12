@@ -348,7 +348,7 @@ const Table = () => {
           setChatMessages((prevMessages) => [
             ...prevMessages,
             {
-              text: `It appears that ${deduplicateEntry.name} appeared ${deduplicateEntry.length} times. Are you sure to remove duplicated entries? Type Yes or No.`,
+              text: `It appears that ${tempName} appeared ${deduplicateEntry.length} times. Are you sure to remove duplicated entries? Type Yes or No.`,
               sender: "bot",
             },
           ]);

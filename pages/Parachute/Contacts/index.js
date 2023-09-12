@@ -4,12 +4,12 @@ import Contacts from "@/components/Parachute/Contacts";
 
 function ParachuteContacts() {
   return (
-    <div className="bg-gray-100 flex flex-col">
+    <div className="bg-gray-100 flex flex-col h-screen">
       <div className="flex-grow">
         <Navbar />
         <Contacts />
       </div>
-      <Footer />
+      <Footer className="sticky bottom-0" />
     </div>
   );
 }
